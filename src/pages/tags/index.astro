@@ -1,15 +1,22 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
 
-//obtenemos todos los posts almacenados en su localización específica
+/**
+ * Alternativa sin trabajar con collections
+ * 
+ * //obtenemos todos los posts almacenados en su localización específica
 const allPosts = Object.values(
   import.meta.glob('../posts/*.md', { eager: true })
 );
 
 //obtenemos un array de los tags que se encuentran en cada post, sin repetirlos
-const tags = [
-  ...new Set(allPosts.map((post: any) => post.frontmatter.tags).flat()),
-];
+const tags = [...new Set(allPosts.map((post: any) => post.frontmatter.tags).flat())];
+ * 
+ */
+
+const allPosts = await getCollection('blog');
+const tags = [...new Set(allPosts.map((post: any) => post.data.tags).flat())];
 
 const pageTitle = 'Tag Index';
 ---
