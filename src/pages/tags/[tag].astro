@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogPost from '../../components/BlogPost.astro';
+
+//función que devuelve un array de rutas a páginas (page routes)
+export async function getStaticPaths() {
+  //obtenemos los posts
+  const allPosts = Object.values(
+    import.meta.glob('../posts/*.md', { eager: true })
+  );
+
+  //obtenemos todas las etiquetas, sin repetirlas
+  const uniqueTags = [
+    ...new Set(allPosts.map((post: any) => post.frontmatter.tags).flat()),
+  ];
+
+  //devolvemos el listado de objetos post, con sus params (el nombre de la page route) y props (data que se le quiere pasar a esas páginas)
+  return uniqueTags.map(tag => {
+    //filtramos los post que correspondan al tag especificado
+    const filteredPosts = allPosts.filter((post: any) =>
+      post.frontmatter.tags.includes(tag)
+    );
+
+    return {
+      params: { tag },
+      props: { posts: filteredPosts },
+    };
+  });
+}
+
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+---
+
+<BaseLayout pageTitle={tag}>
+  <p>Posts tagged with {tag}</p>
+  <ul>
+    {
+      posts.map((post: any) => (
+        <BlogPost url={post.url} title={post.frontmatter.title} />
+      ))
+    }
+  </ul>
+</BaseLayout>

@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-
 const pageTitle = 'About Me';
 const identity = {
   firstName: 'Lara',
@@ -20,8 +19,11 @@ const fontWeight = 'bold';
 const textCase = 'uppercase';
 ---
 
-<BaseLayout>
-  <style is:global define:vars={{ skillColor, titleColor, fontWeight, textCase }}>
+<BaseLayout pageTitle={pageTitle}>
+  <style
+    is:global
+    define:vars={{ skillColor, titleColor, fontWeight, textCase }}
+  >
     h1 {
       color: var(--titleColor);
       font-size: 4rem;
